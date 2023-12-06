@@ -4,6 +4,7 @@ import com.example.RestaurantProjectV2.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,7 +32,7 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<OrderEntity> addOrder(@RequestBody OrderEntity order) {
+    public ResponseEntity<OrderEntity> addOrder(@Validated @RequestBody OrderEntity order) {
         HttpStatus status = HttpStatus.CREATED;
         OrderEntity saved = orderService.save(order);
         return new ResponseEntity<>(saved,status);
