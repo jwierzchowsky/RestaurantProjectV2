@@ -1,4 +1,5 @@
 package com.example.RestaurantProjectV2;
+
 import com.example.RestaurantProjectV2.domain.OrderEntity;
 import com.example.RestaurantProjectV2.repository.OrderRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = RestaurantProjectV2Application.class)
 @AutoConfigureMockMvc
-@EnableAutoConfiguration(exclude= SecurityAutoConfiguration.class)
+@EnableAutoConfiguration(exclude = SecurityAutoConfiguration.class)
 @AutoConfigureTestDatabase
 public class RestaurantProjectIntegrationTests {
     @Autowired
@@ -40,12 +41,12 @@ public class RestaurantProjectIntegrationTests {
     @Autowired
     private OrderRepository repository;
 
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    Date futureDate = new Date(System.currentTimeMillis() + 60000);
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void whenValidInput_thenCreateStudent() throws IOException, Exception{
-        OrderEntity firstOrder = new OrderEntity("Schabowy", 1, formatter.parse("2023-11-09"));
+    public void whenValidInput_thenCreateStudent() throws IOException, Exception {
+        OrderEntity firstOrder = new OrderEntity("Schabowy", 1, futureDate);
 
         mvc.perform(post("/api/orders")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -55,10 +56,11 @@ public class RestaurantProjectIntegrationTests {
         assertThat(found).extracting(OrderEntity::getName).contains("Schabowy");
 
     }
+
     @Test
     public void givenOrders_whenGetOrder_thenStatus200() throws Exception {
-        createTestOrder("Schabowy", 3, formatter.parse("2023-11-09"));
-        createTestOrder("Pomidorowa", 2, formatter.parse("2023-11-09"));
+        createTestOrder("Schabowy", 3, futureDate);
+        createTestOrder("Pomidorowa", 2, futureDate);
 
         mvc.perform(get("/api/orders")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -75,9 +77,10 @@ public class RestaurantProjectIntegrationTests {
         OrderEntity order = new OrderEntity(name, quantity, orderDate);
         return repository.saveAndFlush(order);
     }
+
     @Test
     public void givenOrderId_whenGetOrderById_thenStatus200() throws Exception {
-        OrderEntity order = createTestOrder("Schabowy", 3, formatter.parse("2023-11-09"));
+        OrderEntity order = createTestOrder("Schabowy", 3, futureDate);
 
         mvc.perform(get("/api/orders/{id}", order.getId())
                         .contentType(MediaType.APPLICATION_JSON))
@@ -86,10 +89,11 @@ public class RestaurantProjectIntegrationTests {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(3)));
     }
+
     @Test
     public void givenOrderId_whenUpdateOrder_thenStatus200() throws Exception {
-        OrderEntity order = createTestOrder("Schabowy", 3, formatter.parse("2023-11-09"));
-        OrderEntity updatedOrder = new OrderEntity("Schabowy z ziemniakami", 5, formatter.parse("2023-11-10"));
+        OrderEntity order = createTestOrder("Schabowy", 3, futureDate);
+        OrderEntity updatedOrder = new OrderEntity("Schabowy z ziemniakami", 5, futureDate);
 
         mvc.perform(put("/api/orders/{id}", order.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -101,9 +105,10 @@ public class RestaurantProjectIntegrationTests {
         assertThat(updated.getName()).isEqualTo("Schabowy z ziemniakami");
         assertThat(updated.getQuantity()).isEqualTo(5);
     }
+
     @Test
     public void givenOrderId_whenDeleteOrder_thenStatus200() throws Exception {
-        OrderEntity order = createTestOrder("Schabowy", 3, formatter.parse("2023-11-09"));
+        OrderEntity order = createTestOrder("Schabowy", 3, futureDate);
 
         mvc.perform(delete("/api/orders/{id}", order.getId())
                         .contentType(MediaType.APPLICATION_JSON))

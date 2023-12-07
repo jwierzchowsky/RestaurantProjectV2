@@ -12,7 +12,9 @@ import java.util.List;
 @Transactional
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     public List<OrderEntity> findAll();
+
     public OrderEntity findByName(String name);
+
     public OrderEntity findByOrderDate(Date date);
 
 }
