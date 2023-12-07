@@ -1,4 +1,5 @@
 package com.example.RestaurantProjectV2.controller;
+
 import com.example.RestaurantProjectV2.domain.OrderEntity;
 import com.example.RestaurantProjectV2.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import java.util.List;
 
 @RestController
@@ -35,7 +37,7 @@ public class OrderController {
     public ResponseEntity<OrderEntity> addOrder(@Validated @RequestBody OrderEntity order) {
         HttpStatus status = HttpStatus.CREATED;
         OrderEntity saved = orderService.save(order);
-        return new ResponseEntity<>(saved,status);
+        return new ResponseEntity<>(saved, status);
     }
 
     @PutMapping("/orders/{id}")

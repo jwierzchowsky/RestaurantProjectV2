@@ -16,27 +16,32 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
 
     @Override
-    public List<OrderEntity> getAllOrders(){
+    public List<OrderEntity> getAllOrders() {
         return orderRepository.findAll();
     }
+
     @Override
-    public OrderEntity getOrderById(Long id){
+    public OrderEntity getOrderById(Long id) {
         return orderRepository.findById(id).orElse(null);
     }
+
     @Override
-    public OrderEntity getOrderByName(String name){
+    public OrderEntity getOrderByName(String name) {
         return orderRepository.findByName(name);
     }
+
     @Override
     public boolean exists(String name) {
         return orderRepository.findByName(name) != null;
     }
+
     @Override
-    public OrderEntity save(OrderEntity order){
+    public OrderEntity save(OrderEntity order) {
         return orderRepository.save(order);
     }
+
     @Override
-    public void deleteOrderById(Long id){
+    public void deleteOrderById(Long id) {
         orderRepository.deleteById(id);
     }
 }
